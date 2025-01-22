@@ -43,11 +43,46 @@ const createRegion = async (req, res) => {
     }
 }
 // delete a region
+const deleteRegion = async (req, res) => {
+    const { id } = req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: "No such region"})
+    }
+
+    const region = await Region.findOneAndDelete({_id: id})
+
+    if (!region) {
+        return res.status(400).json({error: "No such region"})
+    }
+
+    res.status(200).json(workout)
+
+}
 
 // update a region
+const updateRegion = async (req, res) => {
+    const { id } =  req.params
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({error: "No such region"})
+    }
+
+    const region = await Region.findOneAndUpdate({_id: id}, {
+        ...req.body
+    })
+
+    if (!region) {
+        return res.status(400).json({error: "No such region"})
+    }
+
+    res.status(200).json(workout)
+}
 
 module.exports = {
     getRegions,
     getRegion,
-    createRegion
+    createRegion,
+    deleteRegion,
+    updateRegion
 }
